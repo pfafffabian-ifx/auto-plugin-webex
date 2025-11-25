@@ -1,3 +1,15 @@
+# v0.1.0 (Tue Nov 25 2025)
+
+#### 🚀 Enhancement
+
+- Use Auto for publishing [#1](https://github.com/pfafffabian-ifx/auto-webex-plugin/pull/1) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v11.3.3 (Fri Nov 14 2025)
 
 #### 🐛 Bug Fix
