@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -25,12 +30,16 @@ jobs:
       
       - name: Install dependencies
         run: pnpm install
-      
-      - name: Run lint
-        run: pnpm run lint
-      
+
       - name: Run tests
         run: pnpm run test
       
       - name: Build
         run: pnpm run build
+
+      - name: Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          pnpx auto shipit

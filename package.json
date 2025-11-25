@@ -57,7 +57,13 @@
   },
   "auto": {
     "plugins": [
-      "npm"
+      "npm",
+      [
+        "webex",
+        {
+          "threshold": "patch"
+        }
+      ]
     ]
   }
 }
