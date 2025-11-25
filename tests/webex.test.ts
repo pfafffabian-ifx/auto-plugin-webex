@@ -4,15 +4,10 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import endent from "endent";
 import WebexPlugin from "../src";
 
-const sendMessage = jest.fn();
+const mockFetch = jest.fn();
 
-jest.mock("webex-node", () => ({
-	init: () => ({
-		messages: {
-			create: sendMessage,
-		},	
-	}),
-}));
+// Mock global fetch
+global.fetch = mockFetch as unknown as typeof fetch;
 
 const mockResponse = {
 	data: { html_url: "https://foo.com" },
@@ -20,6 +15,15 @@ const mockResponse = {
 } as any;
 // biome-ignore lint/suspicious/noExplicitAny: no type information
 const mockGit = { options: { repo: "Test-Repo" } } as any;
+// biome-ignore lint/suspicious/noExplicitAny: no type information
+const mockLogger = {
+	log: {
+		info: jest.fn(),
+		debug: jest.fn(),
+		warn: jest.fn(),
+		error: jest.fn(),
+	},
+} as any;
 
 test("Webex Plugin should throw without proper tokens set", async () => {
 	expect(() => new WebexPlugin()).toThrow();
@@ -32,7 +36,13 @@ describe("Webex Plugin", () => {
 	});
 
 	beforeEach(() => {
-		sendMessage.mockReset();
+		mockFetch.mockClear();
+		mockFetch.mockResolvedValue({
+			ok: true,
+			status: 200,
+			statusText: "OK",
+			text: async () => "",
+		});
 	});
 
 	test("should not throw with env variables set", async () => {
@@ -43,21 +53,21 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			commits: [],
 			releaseNotes: "",
 			lastRelease: "1.0.0",
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should do nothing if the threshold isn't met", async () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.0.1",
 			commits: [],
@@ -66,14 +76,14 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should post message if threshold met", async () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -82,14 +92,14 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).toHaveBeenCalled();
+		expect(mockFetch).toHaveBeenCalled();
 	});
 
 	test("should still work if version doesn't change", async () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.0.0",
 			commits: [],
@@ -98,14 +108,14 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should be able to configure threshold", async () => {
 		const plugin = new WebexPlugin({ threshold: SEMVER.major });
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -114,7 +124,7 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should be able to configure message", async () => {
@@ -127,7 +137,7 @@ describe("Webex Plugin", () => {
 		});
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -136,14 +146,17 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage.mock.calls[0][0].markdown).toMatchSnapshot();
+		expect(mockFetch).toHaveBeenCalled();
+		const fetchCall = mockFetch.mock.calls[0];
+		const body = JSON.parse(fetchCall[1].body);
+		expect(body.markdown).toMatchSnapshot();
 	});
 
 	test("should post correct message", async () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -164,14 +177,17 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage.mock.calls[0][0].markdown).toMatchSnapshot();
+		expect(mockFetch).toHaveBeenCalled();
+		const fetchCall = mockFetch.mock.calls[0];
+		const body = JSON.parse(fetchCall[1].body);
+		expect(body.markdown).toMatchSnapshot();
 	});
 
 	test("should handle long release notes", async () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -197,6 +213,9 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage.mock.calls[0][0].markdown).toMatchSnapshot();
+		expect(mockFetch).toHaveBeenCalled();
+		const fetchCall = mockFetch.mock.calls[0];
+		const body = JSON.parse(fetchCall[1].body);
+		expect(body.markdown).toMatchSnapshot();
 	});
 });
