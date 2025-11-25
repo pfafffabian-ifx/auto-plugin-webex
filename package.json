@@ -1,0 +1,63 @@
+{
+  "name": "auto-webex-plugin",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "description": "Webex plugin for auto",
+  "license": "MIT",
+  "author": {
+    "name": "Fabian Pfaff",
+    "email": "fabian.pfaff@infineon.com"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pfafffabian-ifx/auto-webex"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "automation",
+    "semantic",
+    "release",
+    "github",
+    "labels",
+    "automated",
+    "continuos integration",
+    "changelog",
+    "webex"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "start": "npm run build -- -w",
+    "lint": "biome check",
+    "format": "biome format --write",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@auto-it/core": "^11.3.6",
+    "endent": "^2.1.0",
+    "fp-ts": "^2.5.3",
+    "io-ts": "^2.1.2",
+    "semver": "^7.0.0",
+    "tslib": "2.1.0",
+    "webex-node": "^3.10.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.7",
+    "@jest/globals": "^30.2.0",
+    "@types/jest": "^30.0.0",
+    "@types/semver": "^7.1.0",
+    "auto": "^11.3.6",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5"
+  },
+  "auto": {
+    "plugins": [
+      "npm"
+    ]
+  }
+}

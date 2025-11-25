@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Webex Plugin should be able to configure message 1`] = `
+"v1.1.0 of Test-Repo was released!
+
+https://foo.com"
+`;
+
+exports[`Webex Plugin should handle long release notes 1`] = `
+"A new minor version of Test-Repo was released!
+
+🐛  Bug Fix
+
+- fix jira PR titles without additional subject  
+- split off useless hash from version  
+
+📝  Documentation
+
+- update docs for canary  
+
+🔩 Dependency Updates
+
+- update deps for things greenkeeper failed on
+
+https://foo.com"
+`;
+
+exports[`Webex Plugin should post correct message 1`] = `
+"A new minor version of Test-Repo was released!
+
+🐛  Bug Fix
+
+- fix jira PR titles without additional subject  
+
+📝  Documentation
+
+- update docs for canary
+
+https://foo.com"
+`;
