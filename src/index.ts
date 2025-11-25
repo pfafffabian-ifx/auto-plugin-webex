@@ -89,7 +89,7 @@ const makeMessage = ({
 /** Post your release notes to Webex Teams during `auto release` */
 export default class WebexPlugin implements IPlugin {
 	/** The name of the plugin */
-	name = "webex";
+	name = "auto-webex-plugin";
 
 	/** The options of the plugin */
 	readonly options: Required<IWebexPluginOptions>;
