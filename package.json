@@ -60,7 +60,7 @@
     "plugins": [
       "npm",
       [
-        "auto-webex-plugin",
+        "webex",
         {
           "threshold": "patch"
         }
