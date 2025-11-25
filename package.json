@@ -44,7 +44,8 @@
     "io-ts": "^2.1.2",
     "semver": "^7.0.0",
     "tslib": "2.1.0",
-    "webex-node": "^3.10.0"
+    "webex-node": "^3.10.0",
+    "auto-webex-plugin": "^0.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.7",

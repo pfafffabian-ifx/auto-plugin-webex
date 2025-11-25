@@ -11,6 +11,9 @@ importers:
       '@auto-it/core':
         specifier: ^11.3.6
         version: 11.3.6(@types/node@24.10.1)(typescript@5.9.3)
+      auto-webex-plugin:
+        specifier: ^0.0.1
+        version: 0.0.1(@types/node@24.10.1)(expo@54.0.25(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(react@19.2.0))(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.5)(react@19.2.0))(typescript@5.9.3)
       endent:
         specifier: ^2.1.0
         version: 2.1.0
@@ -1727,6 +1730,9 @@ packages:
   author-regex@1.0.0:
     resolution: {integrity: sha512-KbWgR8wOYRAPekEmMXrYYdc7BRyhn2Ftk7KWfMUnQ43hFdojWEFRxhhRUm3/OFEdPa1r0KAvTTg9YQK57xTe0g==}
     engines: {node: '>=0.8'}
+
+  auto-webex-plugin@0.0.1:
+    resolution: {integrity: sha512-/FrNeF2l4heMCLCIBOmkFI2WM2QNYJ5w3YvZuzzMkIWv9ybj0QAa1XjP0Hqsa7sC65hVIZXekM8oirEsDtk8/Q==}
 
   auto@11.3.6:
     resolution: {integrity: sha512-Db13X4WVNPzPtWKSoiOzhfW2g3zNUTDR1X3wkQPdIW21xtajwm5Taqg3BXWR2u7/45W0bU+6YykVgioNRwrwIw==}
@@ -7490,6 +7496,27 @@ snapshots:
     optional: true
 
   author-regex@1.0.0: {}
+
+  auto-webex-plugin@0.0.1(@types/node@24.10.1)(expo@54.0.25(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(react@19.2.0))(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.5)(react@19.2.0))(typescript@5.9.3):
+    dependencies:
+      '@auto-it/core': 11.3.6(@types/node@24.10.1)(typescript@5.9.3)
+      endent: 2.1.0
+      fp-ts: 2.16.11
+      io-ts: 2.2.22(fp-ts@2.16.11)
+      semver: 7.7.3
+      tslib: 2.1.0
+      webex-node: 3.10.0(expo@54.0.25(@babel/core@7.28.5)(react-native@0.82.1(@babel/core@7.28.5)(react@19.2.0))(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.5)(react@19.2.0))
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - expo
+      - react-native
+      - supports-color
+      - typescript
+      - utf-8-validate
 
   auto@11.3.6(@types/node@24.10.1)(typescript@5.9.3):
     dependencies:
