@@ -22,6 +22,15 @@ describe("Webex Plugin Integration Tests", () => {
 	} as any;
 	// biome-ignore lint/suspicious/noExplicitAny: no type information
 	const mockGit = { options: { repo: "auto-webex-plugin-test" } } as any;
+	// biome-ignore lint/suspicious/noExplicitAny: no type information
+	const mockLogger = {
+		log: {
+			info: jest.fn(),
+			debug: jest.fn(),
+			warn: jest.fn(),
+			error: jest.fn(),
+		},
+	} as any;
 
 	test("should successfully initialize with real credentials", () => {
 		expect(() => new WebexPlugin()).not.toThrow();
@@ -31,7 +40,7 @@ describe("Webex Plugin Integration Tests", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 
 		// This will actually send a message to the configured Webex room
 		await expect(
@@ -56,7 +65,7 @@ describe("Webex Plugin Integration Tests", () => {
 		});
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 
 		await expect(
 			hooks.afterRelease.promise({
@@ -75,7 +84,7 @@ describe("Webex Plugin Integration Tests", () => {
 		const plugin = new WebexPlugin({ roomId: customRoomId });
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 
 		await expect(
 			hooks.afterRelease.promise({
@@ -92,7 +101,7 @@ describe("Webex Plugin Integration Tests", () => {
 		const plugin = new WebexPlugin({ threshold: "major" });
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 
 		// This should not send a message (minor release with major threshold)
 		await hooks.afterRelease.promise({

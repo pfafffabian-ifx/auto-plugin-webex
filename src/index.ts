@@ -134,7 +134,10 @@ export default class WebexPlugin implements IPlugin {
 
 	/** Tap into auto plugin points. */
 	apply(auto: Auto) {
-		auto.logger?.log?.info("Webex plugin initialized");
+		// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+		if (auto.logger && auto.logger.log) {
+			auto.logger.log.info("Webex plugin initialized");
+		}
 		
 		auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
 			if (name === this.name) {
@@ -145,18 +148,30 @@ export default class WebexPlugin implements IPlugin {
 		auto.hooks.afterRelease.tapPromise(
 			this.name,
 			async ({ newVersion, lastRelease, response, releaseNotes }) => {
-				auto.logger?.log?.debug("afterRelease hook triggered");
+				// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+				if (auto.logger && auto.logger.log) {
+					auto.logger.log.debug("afterRelease hook triggered");
+				}
 				
 				if (!newVersion || !response || !auto.git) {
-					auto.logger?.log?.info("Skipping Webex notification - missing required data");
+					// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+					if (auto.logger && auto.logger.log) {
+						auto.logger.log.info("Skipping Webex notification - missing required data");
+					}
 					return;
 				}
 
 				const versionBump = diff(newVersion, lastRelease) || "patch";
-				auto.logger?.log?.info(`Version bump: ${versionBump} (threshold: ${this.options.threshold})`);
+				// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+				if (auto.logger && auto.logger.log) {
+					auto.logger.log.info(`Version bump: ${versionBump} (threshold: ${this.options.threshold})`);
+				}
 
 				if (isGreaterThan(this.options.threshold as ReleaseType, versionBump)) {
-					auto.logger?.log?.info("Version bump below threshold, skipping Webex notification");
+					// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+					if (auto.logger && auto.logger.log) {
+						auto.logger.log.info("Version bump below threshold, skipping Webex notification");
+					}
 					return;
 				}
 
@@ -164,7 +179,10 @@ export default class WebexPlugin implements IPlugin {
 					? response.map((r) => `- ${r.data.html_url}`).join("\n")
 					: response.data.html_url;
 
-				auto.logger?.log?.info("Sending Webex notification");
+				// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+				if (auto.logger && auto.logger.log) {
+					auto.logger.log.info("Sending Webex notification");
+				}
 				
 				await this.sendMessage(
 					makeMessage({
@@ -177,7 +195,10 @@ export default class WebexPlugin implements IPlugin {
 					}),
 				);
 				
-				auto.logger?.log?.info("Webex notification sent successfully");
+				// biome-ignore lint/complexity/useOptionalChain: runtime safety check needed
+				if (auto.logger && auto.logger.log) {
+					auto.logger.log.info("Webex notification sent successfully");
+				}
 			},
 		);
 	}

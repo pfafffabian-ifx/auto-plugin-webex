@@ -20,6 +20,15 @@ const mockResponse = {
 } as any;
 // biome-ignore lint/suspicious/noExplicitAny: no type information
 const mockGit = { options: { repo: "Test-Repo" } } as any;
+// biome-ignore lint/suspicious/noExplicitAny: no type information
+const mockLogger = {
+	log: {
+		info: jest.fn(),
+		debug: jest.fn(),
+		warn: jest.fn(),
+		error: jest.fn(),
+	},
+} as any;
 
 test("Webex Plugin should throw without proper tokens set", async () => {
 	expect(() => new WebexPlugin()).toThrow();
@@ -43,7 +52,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			commits: [],
 			releaseNotes: "",
@@ -57,7 +66,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.0.1",
 			commits: [],
@@ -73,7 +82,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -89,7 +98,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.0.0",
 			commits: [],
@@ -105,7 +114,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin({ threshold: SEMVER.major });
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -127,7 +136,7 @@ describe("Webex Plugin", () => {
 		});
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -143,7 +152,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
@@ -171,7 +180,7 @@ describe("Webex Plugin", () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();
 
-		plugin.apply({ hooks, git: mockGit } as Auto);
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
 		await hooks.afterRelease.promise({
 			newVersion: "1.1.0",
 			commits: [],
