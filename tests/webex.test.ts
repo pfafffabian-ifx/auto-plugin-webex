@@ -5,12 +5,20 @@ import endent from "endent";
 import WebexPlugin from "../src";
 
 const sendMessage = jest.fn();
+const mockOnce = jest.fn();
 
 jest.mock("webex-node", () => ({
 	init: () => ({
 		messages: {
 			create: sendMessage,
-		},	
+		},
+		once: mockOnce.mockImplementation((event, callback) => {
+			if (event === "ready") {
+				// Simulate ready event immediately
+				setImmediate(callback);
+			}
+		}),
+		canAuthorize: true,
 	}),
 }));
 
@@ -42,6 +50,13 @@ describe("Webex Plugin", () => {
 
 	beforeEach(() => {
 		sendMessage.mockReset();
+		mockOnce.mockClear();
+		mockOnce.mockImplementation((event, callback) => {
+			if (event === "ready") {
+				// Simulate ready event immediately
+				setImmediate(callback);
+			}
+		});
 	});
 
 	test("should not throw with env variables set", async () => {
