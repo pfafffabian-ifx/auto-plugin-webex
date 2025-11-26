@@ -1,3 +1,15 @@
+# v0.3.0 (Wed Nov 26 2025)
+
+#### 🚀 Enhancement
+
+- chore: remove old Changelog [#3](https://github.com/pfafffabian-ifx/auto-webex-plugin/pull/3) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.2.0 (Wed Nov 26 2025)
 
 #### 🚀 Enhancement
