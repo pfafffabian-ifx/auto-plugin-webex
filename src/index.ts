@@ -9,7 +9,7 @@ import * as t from "io-ts";
 import { diff, type ReleaseType } from "semver";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Webex = require("webex-node");
+const WebexNode = require("webex-node");
 
 const pluginOptions = t.partial({
 	/** The message template to use to post to Webex */
@@ -113,7 +113,7 @@ export default class WebexPlugin implements IPlugin {
 			);
 		}
 
-		this.webex = Webex.init({
+		this.webex = WebexNode.init({
 			credentials: {
 				access_token: process.env.WEBEX_TOKEN,
 			},
