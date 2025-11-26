@@ -1,6 +1,6 @@
 {
-  "name": "auto-webex-plugin",
-  "version": "0.4.2",
+  "name": "auto-plugin-webex",
+  "version": "0.4.1",
   "main": "dist/index.js",
   "description": "Webex plugin for auto",
   "license": "MIT",
@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@auto-it/core": "^11.3.6",
-    "auto-webex-plugin": "^0.4.2",
     "endent": "^2.1.0",
     "fp-ts": "^2.16.11",
     "io-ts": "^2.2.22",
@@ -61,7 +60,7 @@
     "plugins": [
       "npm",
       [
-        "auto-webex-plugin",
+        "../dist/index.js",
         {
           "threshold": "patch"
         }
