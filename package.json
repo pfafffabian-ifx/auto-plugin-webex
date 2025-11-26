@@ -1,6 +1,6 @@
 {
   "name": "auto-webex-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "dist/index.js",
   "description": "Webex plugin for auto",
   "license": "MIT",
