@@ -159,7 +159,12 @@ export default class WebexPlugin implements IPlugin {
 					return;
 				}
 
-				const versionBump = diff(newVersion, lastRelease) || "patch";
+				// lastRelease might be a commit SHA instead of a semver version
+				// Only calculate diff if lastRelease is a valid semver version
+				let versionBump: ReleaseType = "patch";
+				if (lastRelease && /^\d+\.\d+\.\d+/.test(lastRelease)) {
+					versionBump = diff(lastRelease, newVersion) || "patch";
+				}
 				auto.logger.log.info(`Webex: Version bump detected: ${versionBump} (${lastRelease} -> ${newVersion})`);
 
 				if (isGreaterThan(this.options.threshold as ReleaseType, versionBump)) {
