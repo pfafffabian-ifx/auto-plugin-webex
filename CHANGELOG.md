@@ -1,3 +1,15 @@
+# v1.1.0 (Wed Nov 26 2025)
+
+#### 🚀 Enhancement
+
+- fix: dont fail on first release [#10](https://github.com/pfafffabian-ifx/auto-plugin-webex/pull/10) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.1.1 (Wed Nov 26 2025)
 
 #### 🐛 Bug Fix
