@@ -1,3 +1,15 @@
+# v0.4.0 (Wed Nov 26 2025)
+
+#### 🚀 Enhancement
+
+- fix: pickup of webex env [#4](https://github.com/pfafffabian-ifx/auto-webex-plugin/pull/4) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.3.0 (Wed Nov 26 2025)
 
 #### 🚀 Enhancement
