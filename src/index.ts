@@ -8,9 +8,6 @@ import endent from "endent";
 import * as t from "io-ts";
 import { diff, type ReleaseType } from "semver";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const WebexNode = require("webex-node");
-
 const pluginOptions = t.partial({
 	/** The message template to use to post to Webex */
 	message: t.string,
@@ -82,11 +79,8 @@ export default class WebexPlugin implements IPlugin {
 	/** The options of the plugin */
 	readonly options: Required<IWebexPluginOptions>;
 
-	/** The Webex SDK instance */
-	// biome-ignore lint/suspicious/noExplicitAny: no types provided by sdk
-	private webex?: any;
-
-	private webexReady?: Promise<void>;
+	/** The Webex access token */
+	private readonly token: string;
 
 	/** Initialize the plugin with it's options */
 	constructor(options: Partial<IWebexPluginOptions> = {}) {
@@ -115,35 +109,32 @@ export default class WebexPlugin implements IPlugin {
 			);
 		}
 
-		this.webex = WebexNode.init({
-			credentials: {
-				access_token: process.env.WEBEX_TOKEN,
-			},
-		});
-		
-		this.webexReady = new Promise<void>((resolve, reject) => {
-			this.webex.once("ready", () => {
-				if (this.webex.canAuthorize) {
-					resolve();
-				} else {
-					reject(new Error("Webex authorization failed"));
-				}
-			});
-		});
+		this.token = process.env.WEBEX_TOKEN;
 	}
 
 	/** Send a message to Webex Teams */
 	private async sendMessage(message: string): Promise<void> {
-		if (!this.webex) {
-			throw new Error("Webex not initialized");
-		}
-
-		await this.webexReady;
-
-		await this.webex.messages.create({
+		const body = JSON.stringify({
 			roomId: this.options.roomId,
 			markdown: message,
 		});
+
+		const response = await fetch("https://webexapis.com/v1/messages", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${this.token}`,
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body,
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(
+				`Failed to send Webex message: ${response.status} ${response.statusText} - ${errorText}`,
+			);
+		}
 	}
 
 	/** Tap into auto plugin points. */

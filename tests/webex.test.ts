@@ -4,23 +4,10 @@ import { makeHooks } from "@auto-it/core/dist/utils/make-hooks";
 import endent from "endent";
 import WebexPlugin from "../src";
 
-const sendMessage = jest.fn();
-const mockOnce = jest.fn();
+const mockFetch = jest.fn();
 
-jest.mock("webex-node", () => ({
-	init: () => ({
-		messages: {
-			create: sendMessage,
-		},
-		once: mockOnce.mockImplementation((event, callback) => {
-			if (event === "ready") {
-				// Simulate ready event immediately
-				setImmediate(callback);
-			}
-		}),
-		canAuthorize: true,
-	}),
-}));
+// Mock global fetch
+global.fetch = mockFetch as unknown as typeof fetch;
 
 const mockResponse = {
 	data: { html_url: "https://foo.com" },
@@ -49,13 +36,12 @@ describe("Webex Plugin", () => {
 	});
 
 	beforeEach(() => {
-		sendMessage.mockReset();
-		mockOnce.mockClear();
-		mockOnce.mockImplementation((event, callback) => {
-			if (event === "ready") {
-				// Simulate ready event immediately
-				setImmediate(callback);
-			}
+		mockFetch.mockClear();
+		mockFetch.mockResolvedValue({
+			ok: true,
+			status: 200,
+			statusText: "OK",
+			text: async () => "",
 		});
 	});
 
@@ -74,7 +60,7 @@ describe("Webex Plugin", () => {
 			lastRelease: "1.0.0",
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should do nothing if the threshold isn't met", async () => {
@@ -90,7 +76,7 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should post message if threshold met", async () => {
@@ -106,7 +92,7 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).toHaveBeenCalled();
+		expect(mockFetch).toHaveBeenCalled();
 	});
 
 	test("should still work if version doesn't change", async () => {
@@ -122,7 +108,7 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should be able to configure threshold", async () => {
@@ -138,7 +124,7 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 
 	test("should be able to configure message", async () => {
@@ -160,7 +146,10 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage.mock.calls[0][0].markdown).toMatchSnapshot();
+		expect(mockFetch).toHaveBeenCalled();
+		const fetchCall = mockFetch.mock.calls[0];
+		const body = JSON.parse(fetchCall[1].body);
+		expect(body.markdown).toMatchSnapshot();
 	});
 
 	test("should post correct message", async () => {
@@ -188,7 +177,10 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage.mock.calls[0][0].markdown).toMatchSnapshot();
+		expect(mockFetch).toHaveBeenCalled();
+		const fetchCall = mockFetch.mock.calls[0];
+		const body = JSON.parse(fetchCall[1].body);
+		expect(body.markdown).toMatchSnapshot();
 	});
 
 	test("should handle long release notes", async () => {
@@ -221,6 +213,9 @@ describe("Webex Plugin", () => {
 			response: mockResponse,
 		});
 
-		expect(sendMessage.mock.calls[0][0].markdown).toMatchSnapshot();
+		expect(mockFetch).toHaveBeenCalled();
+		const fetchCall = mockFetch.mock.calls[0];
+		const body = JSON.parse(fetchCall[1].body);
+		expect(body.markdown).toMatchSnapshot();
 	});
 });
