@@ -1,3 +1,20 @@
+# v0.1.0 (Wed Nov 26 2025)
+
+#### 🚀 Enhancement
+
+- fix: fix name and add logging [#8](https://github.com/pfafffabian-ifx/auto-plugin-webex/pull/8) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### ⚠️ Pushed to `main`
+
+- feat: init webex auto plugin (based on twitter plugin) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+- feat: modify from twitter example ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.4.3 (Wed Nov 26 2025)
 
 #### ⚠️ Pushed to `main`
