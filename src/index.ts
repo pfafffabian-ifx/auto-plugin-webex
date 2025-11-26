@@ -26,18 +26,6 @@ const pluginOptions = t.partial({
 
 export type IWebexPluginOptions = t.TypeOf<typeof pluginOptions>;
 
-const defaults: Required<IWebexPluginOptions> = {
-	threshold: SEMVER.minor,
-	roomId: process.env.WEBEX_ROOM_ID || "",
-	message: endent`
-    A new %release version of %package was released!
-
-    %notes
-
-    %link
-  `,
-};
-
 const RELEASE_PRECEDENCE: ReleaseType[] = ["patch", "minor", "major"];
 
 /** Determine the release with the biggest semver change */
@@ -100,7 +88,18 @@ export default class WebexPlugin implements IPlugin {
 
 	/** Initialize the plugin with it's options */
 	constructor(options: Partial<IWebexPluginOptions> = {}) {
-		this.options = { ...defaults, ...options };
+		// Set defaults with environment variables evaluated at construction time
+		this.options = {
+			threshold: options.threshold ?? SEMVER.minor,
+			roomId: options.roomId ?? process.env.WEBEX_ROOM_ID ?? "",
+			message: options.message ?? endent`
+    A new %release version of %package was released!
+
+    %notes
+
+    %link
+  `,
+		};
 
 		if (!process.env.WEBEX_TOKEN) {
 			throw new Error(
