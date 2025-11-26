@@ -60,7 +60,7 @@
     "plugins": [
       "npm",
       [
-        "../dist/index.js",
+        "./dist/index.js",
         {
           "threshold": "patch"
         }
