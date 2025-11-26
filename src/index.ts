@@ -74,7 +74,7 @@ const makeMessage = ({
 /** Post your release notes to Webex Teams during `auto release` */
 export default class WebexPlugin implements IPlugin {
 	/** The name of the plugin */
-	name = "auto-webex-plugin";
+	name = "auto-plugin-webex";
 
 	/** The options of the plugin */
 	readonly options: Required<IWebexPluginOptions>;
@@ -113,7 +113,9 @@ export default class WebexPlugin implements IPlugin {
 	}
 
 	/** Send a message to Webex Teams */
-	private async sendMessage(message: string): Promise<void> {
+	private async sendMessage(auto: Auto, message: string): Promise<void> {
+		auto.logger.log.info("Webex: Preparing to send message to room");
+		
 		const body = JSON.stringify({
 			roomId: this.options.roomId,
 			markdown: message,
@@ -131,16 +133,20 @@ export default class WebexPlugin implements IPlugin {
 
 		if (!response.ok) {
 			const errorText = await response.text();
+			auto.logger.log.error("Webex: Failed to send message");
 			throw new Error(
 				`Failed to send Webex message: ${response.status} ${response.statusText} - ${errorText}`,
 			);
 		}
+		
+		auto.logger.log.info("Webex: Message sent successfully");
 	}
 
 	/** Tap into auto plugin points. */
 	apply(auto: Auto) {
 		auto.hooks.validateConfig.tapPromise(this.name, async (name, options) => {
 			if (name === this.name) {
+				auto.logger.log.info("Webex: Validating plugin configuration");
 				return validatePluginConfiguration(this.name, pluginOptions, options);
 			}
 		});
@@ -149,12 +155,15 @@ export default class WebexPlugin implements IPlugin {
 			this.name,
 			async ({ newVersion, lastRelease, response, releaseNotes }) => {
 				if (!newVersion || !response || !auto.git) {
+					auto.logger.log.info("Webex: Skipping post-release notification (missing required data)");
 					return;
 				}
 
 				const versionBump = diff(newVersion, lastRelease) || "patch";
+				auto.logger.log.info(`Webex: Version bump detected: ${versionBump} (${lastRelease} -> ${newVersion})`);
 
 				if (isGreaterThan(this.options.threshold as ReleaseType, versionBump)) {
+					auto.logger.log.info(`Webex: Version bump ${versionBump} does not meet threshold ${this.options.threshold}`);
 					return;
 				}
 
@@ -162,7 +171,9 @@ export default class WebexPlugin implements IPlugin {
 					? response.map((r) => `- ${r.data.html_url}`).join("\n")
 					: response.data.html_url;
 
+				auto.logger.log.info("Webex: Creating release message");
 				await this.sendMessage(
+					auto,
 					makeMessage({
 						releaseNotes,
 						message: this.options.message,
