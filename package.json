@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@auto-it/core": "^11.3.6",
-    "auto-webex-plugin": "file:.",
+    "auto-webex-plugin": "^0.4.1",
     "endent": "^2.1.0",
     "fp-ts": "^2.5.3",
     "io-ts": "^2.1.2",
