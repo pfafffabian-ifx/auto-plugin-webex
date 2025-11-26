@@ -1,3 +1,15 @@
+# v0.4.1 (Wed Nov 26 2025)
+
+#### ⚠️ Pushed to `main`
+
+- fix: self dependency ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.4.0 (Wed Nov 26 2025)
 
 #### 🚀 Enhancement
