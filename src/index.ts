@@ -86,6 +86,8 @@ export default class WebexPlugin implements IPlugin {
 	// biome-ignore lint/suspicious/noExplicitAny: no types provided by sdk
 	private webex?: any;
 
+	private webexReady?: Promise<void>;
+
 	/** Initialize the plugin with it's options */
 	constructor(options: Partial<IWebexPluginOptions> = {}) {
 		// Set defaults with environment variables evaluated at construction time
@@ -118,6 +120,16 @@ export default class WebexPlugin implements IPlugin {
 				access_token: process.env.WEBEX_TOKEN,
 			},
 		});
+		
+		this.webexReady = new Promise<void>((resolve, reject) => {
+			this.webex.once("ready", () => {
+				if (this.webex.canAuthorize) {
+					resolve();
+				} else {
+					reject(new Error("Webex authorization failed"));
+				}
+			});
+		});
 	}
 
 	/** Send a message to Webex Teams */
@@ -125,6 +137,8 @@ export default class WebexPlugin implements IPlugin {
 		if (!this.webex) {
 			throw new Error("Webex not initialized");
 		}
+
+		await this.webexReady;
 
 		await this.webex.messages.create({
 			roomId: this.options.roomId,
