@@ -1,3 +1,15 @@
+# v0.4.3 (Wed Nov 26 2025)
+
+#### ⚠️ Pushed to `main`
+
+- feat: init webex auto plugin (based on twitter plugin) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.4.2 (Wed Nov 26 2025)
 
 #### 🐛 Bug Fix
