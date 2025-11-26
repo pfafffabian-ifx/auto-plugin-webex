@@ -1,3 +1,17 @@
+# v0.4.2 (Wed Nov 26 2025)
+
+#### 🐛 Bug Fix
+
+- fix: remove self reference [#5](https://github.com/pfafffabian-ifx/auto-webex-plugin/pull/5) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+- fix: typescript error [#5](https://github.com/pfafffabian-ifx/auto-webex-plugin/pull/5) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+- feat: add logging [#5](https://github.com/pfafffabian-ifx/auto-webex-plugin/pull/5) ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+#### Authors: 1
+
+- Fabian Pfaff ([@pfafffabian-ifx](https://github.com/pfafffabian-ifx))
+
+---
+
 # v0.4.1 (Wed Nov 26 2025)
 
 #### ⚠️ Pushed to `main`
