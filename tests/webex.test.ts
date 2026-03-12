@@ -95,6 +95,28 @@ describe("Webex Plugin", () => {
 		expect(mockFetch).toHaveBeenCalled();
 	});
 
+	test("should not throw when failOnError is false", async () => {
+		mockFetch.mockResolvedValue({
+			ok: false,
+			status: 400,
+			statusText: "Bad Request",
+			text: async () => "Invalid room",
+		});
+		const plugin = new WebexPlugin({ failOnError: false, threshold: SEMVER.patch });
+		const hooks = makeHooks();
+
+		plugin.apply({ hooks, git: mockGit, logger: mockLogger } as Auto);
+		await expect(
+			hooks.afterRelease.promise({
+				newVersion: "1.0.1",
+				commits: [],
+				releaseNotes: "",
+				lastRelease: "1.0.0",
+				response: mockResponse,
+			}),
+		).resolves.not.toThrow();
+	});
+
 	test("should still work if version doesn't change", async () => {
 		const plugin = new WebexPlugin();
 		const hooks = makeHooks();

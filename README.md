@@ -79,3 +79,13 @@ By default the `webex` plugin will only post if the version difference between t
   "plugins": [["webex", { "threshold": "major" }]]
 }
 ```
+
+### Fail On Error
+
+By default the `webex` plugin will throw when posting to Webex fails. Set `failOnError` to `false` to log the error and continue.
+
+```json
+{
+  "plugins": [["webex", { "failOnError": false }]]
+}
+```
