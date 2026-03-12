@@ -11,6 +11,8 @@ import { diff, type ReleaseType } from "semver";
 const pluginOptions = t.partial({
 	/** The message template to use to post to Webex */
 	message: t.string,
+	/** When false, Webex post errors will be logged but not thrown */
+	failOnError: t.boolean,
 	/** A threshold the semver has to pass to be posted to Webex */
 	threshold: t.keyof({
 		patch: null,
@@ -88,6 +90,7 @@ export default class WebexPlugin implements IPlugin {
 		this.options = {
 			threshold: options.threshold ?? SEMVER.minor,
 			roomId: options.roomId ?? process.env.WEBEX_ROOM_ID ?? "",
+			failOnError: options.failOnError ?? true,
 			message: options.message ?? endent`
     A new %release version of %package was released!
 
@@ -120,26 +123,44 @@ export default class WebexPlugin implements IPlugin {
 			roomId: this.options.roomId,
 			markdown: message,
 		});
+		try {
+			const response = await fetch("https://webexapis.com/v1/messages", {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${this.token}`,
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body,
+			});
 
-		const response = await fetch("https://webexapis.com/v1/messages", {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${this.token}`,
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			},
-			body,
-		});
+			if (!response.ok) {
+				const errorText = await response.text();
+				auto.logger.log.error("Webex: Failed to send message");
+				const error = new Error(
+					`Failed to send Webex message: ${response.status} ${response.statusText} - ${errorText}`,
+				);
 
-		if (!response.ok) {
-			const errorText = await response.text();
+				if (this.options.failOnError) {
+					throw error;
+				}
+
+				auto.logger.log.warn(error.message);
+				return;
+			}
+
+			auto.logger.log.info("Webex: Message sent successfully");
+		} catch (error) {
 			auto.logger.log.error("Webex: Failed to send message");
-			throw new Error(
-				`Failed to send Webex message: ${response.status} ${response.statusText} - ${errorText}`,
+
+			if (this.options.failOnError) {
+				throw error;
+			}
+
+			auto.logger.log.warn(
+				`Webex: Continuing despite error: ${error instanceof Error ? error.message : String(error)}`,
 			);
 		}
-		
-		auto.logger.log.info("Webex: Message sent successfully");
 	}
 
 	/** Tap into auto plugin points. */
